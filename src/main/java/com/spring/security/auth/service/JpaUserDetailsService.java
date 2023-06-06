@@ -1,0 +1,47 @@
+package com.spring.security.auth.service;
+
+import com.spring.security.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * @author Antonio Esteban Salazar Ichuta <br>
+ * Ende Tecnologías S.A.
+ */
+
+@Service
+public class JpaUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<com.spring.security.entities.User> userOptional = userRepository.findByUsername( username );
+        if( !userOptional.isPresent() ){
+            throw new UsernameNotFoundException( String.format( "Username %s no existe", username ) );
+        }
+        com.spring.security.entities.User userDb = userOptional.orElseThrow();
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add( new SimpleGrantedAuthority( "ROLE_USER" ) );
+
+        return new User( userDb.getUsername(),
+                userDb.getPassword(),
+                true,
+                true,
+                true,
+                true,
+                authorities );
+    }
+}

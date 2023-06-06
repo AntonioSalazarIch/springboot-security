@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    # ***** SERVIDOR PRODUCCIÓN *****
+    #url: jdbc:postgresql://10.241.35.105:5432/agcrc_icono
+    #username: agcrcds
+    #password: 4gcrcd5.467
+
+    # ***** LOCAL SERVIDOR PRUEBAS*****
+    #url: jdbc:postgresql://10.223.105.30:5533/atc_movil_cortes
+    #username: postgres
+    #password: postgres
+
+    # ***** LOCAL *****
+    url: jdbc:postgresql://localhost:5432/seguridad_db
+    username: postgres
+    password: postgres
+
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    hibernate:
+    ddl-auto: create
+    #ddl-auto: create-drop
+    #ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+jwt:
+  header: Authorization
+  secret: endeTecnologias
+  expiration: 604800
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
+logging:
+  level:
+    org:
+      hibernate:
